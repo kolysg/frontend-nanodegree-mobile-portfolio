@@ -5,13 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content=" FILL ME IN ">
     <meta name="author" content=" FILL ME IN ">
+    <style>
+    	body { background: #fff; }
+		header, footer, .container { max-width: 45em; margin: 0 auto; }
+		header { padding: 0 0.5em; color: #C90B0B; }
+		header img { border-radius: 40px; float: left; }
+		header p { font-size:1.5em; font-weight: bold; padding-left: 4em;}
+		header p span { font-size: 0.8em; font-weight: normal;}
+    </style>
     <title>Koly Sengupta: Portfolio</title>
 
     <!-- Hmm, what is the impact of web fonts on speed? Measure it... -->
     <link href="//fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
 
     <link href="css/style.css" rel="stylesheet">
-    <link href="css/print.css" rel="stylesheet">
 
     <script>
       (function(w,g){w['GoogleAnalyticsObject']=g;
@@ -64,6 +71,22 @@
         </ul>
       </div>
 
+    <noscript id="deferred-styles">
+      <link rel="stylesheet" type="text/css" href="style.css"/>
+    </noscript>
+    <script>
+      var loadDeferredStyles = function() {
+        var addStylesNode = document.getElementById("deferred-styles");
+        var replacement = document.createElement("div");
+        replacement.innerHTML = addStylesNode.textContent;
+        document.body.appendChild(replacement)
+        addStylesNode.parentElement.removeChild(addStylesNode);
+      };
+      var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+          webkitRequestAnimationFrame || msRequestAnimationFrame;
+      if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
+      else window.addEventListener('load', loadDeferredStyles);
+    </script>
       <footer>
         <p>&copy; Web Performance 2014 <span id="crp-stats"></span></p>
       </footer>

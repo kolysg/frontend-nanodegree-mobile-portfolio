@@ -134,6 +134,20 @@
       ga('send', 'pageview');
     </script>
     <!--Google font at the end can change optimization with @import, let's see -->
-    <style> @import "//fonts.googleapis.com/css?family=Open+Sans:400,700"> </style>
+    <!--<style> @import "//fonts.googleapis.com/css?family=Open+Sans:400,700"> </style>-->
+    <!--Optimized CSS Delivery trick for Google fonts -->
+    <script>
+        var cb = function() {
+            var l = document.createElement('link');
+            l.rel = 'stylesheet';
+            l.href = 'http://fonts.googleapis.com/css?family=Open+Sans:400,700';
+            var h = document.getElementsByTagName('head')[0];
+            h.parentNode.insertBefore(l, h);
+       };
+          var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+                        webkitRequestAnimationFrame || msRequestAnimationFrame;
+          if (raf) raf(cb);
+          else window.addEventListener('load', cb);
+	</script>
   </body>
 </html>

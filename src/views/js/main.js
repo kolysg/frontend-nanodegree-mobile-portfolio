@@ -500,13 +500,19 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-
+//Changed to select the moving pizzas element by class name
   var items = document.getElementsByClassName('mover');
-  for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
-    console.log("phase:" + phase, "scrolltop: " + document.body.scrollTop / 1250);
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
-  }
+//Created a phaseArray for pushing the elements of the phase calculation from it's own loop.
+  var phaseArr = [];
+  for (var j = 0; j < 5; j++) {
+    phaseArr.push(Math.sin((document.body.scrollTop / 1250) + (j % 5)));//adding a scrollTop setback with each of the element.
+    //console.log("phase:" + phase, "scrolltop: " + document.body.scrollTop / 1250);
+  };
+  //Styles for the element now access the phaseArr to retrieve each element instead of calculating each time.
+  for (var i = 0; i < items.length; i++){
+    console.log("phaseArr[i%5]: " + phaseArr[i % 5]); 
+    items[i].style.left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px'; // TO Do: Use transform translate
+  };
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
@@ -525,10 +531,13 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256; //Ques: What is 's'? How is it calculated? Ans: s= innerWidth, wasn't calculated just assigned.
-  //Create rows according to screen height
-  var row = Math.round(window.screen.height / s)
+  //Create rows according to window.innerHeight
+  var row = Math.ceil(window.innerHeight/s);
+  console.log("window-height: " + window.innerHeight/s);
+  var numberofPizzas = row * cols;
+  console.log('row: ' + row);
   var movingPizzas = document.getElementById("movingPizzas1");
-  var numberofPizas = rows*col;
+  
   for (var i = 0; i < numberofPizzas; i++) {//Too many Pizzas, reduce the number, how? Can we measure it according to screen height & width? or Row & Columns?
     var elem = document.createElement('img');
     elem.className = 'mover';
@@ -541,5 +550,5 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("elem.style.top: " + elem.style.top);
     movingPizzas.appendChild(elem);
   }
-  updatePositions();
+  requestAnimationFrame(updatePositions);//try using requestAnimationFrame
 });

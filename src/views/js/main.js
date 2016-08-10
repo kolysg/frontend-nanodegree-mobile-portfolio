@@ -501,9 +501,10 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var items = document.getElementByClassName('mover');
+  var items = document.querySelectorAll('.mover');
   for (var i = 0; i < items.length; i++) {
     var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+    //console.log("phase:" + phase, "scrolltop: " + document.body.scrollTop / 1250);
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
@@ -523,15 +524,19 @@ window.addEventListener('scroll', updatePositions);
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
-  var s = 256;
-  for (var i = 0; i < 200; i++) {
+  var s = 256; //Ques: What is 's'? How is it calculated? Ans: s= innerWidth, wasn't calculated just assigned.
+  //Create rows according to screen height
+  var row = Math.round(window.screen.height / s)
+  for (var i = 0; i < 200; i++) {//Too many Pizzas, reduce the number, how? Can we measure it according to screen height & width? or Row & Columns?
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
-    elem.basicLeft = (i % cols) * s;
+    elem.basicLeft = (i % cols) * s; //Just a helpful calculation (sorting trick) for setback from left in px, It holds a number which is used by the animation function to determine where each element should be
+    console.log("basicleft: " + elem.basicLeft);
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
+    console.log("elem.style.top: " + elem.style.top);
     document.querySelector("#movingPizzas1").appendChild(elem);
   }
   updatePositions();

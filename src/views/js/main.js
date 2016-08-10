@@ -406,14 +406,14 @@ var resizePizzas = function(size) {
   function changeSliderLabel(size) {
     switch(size) {
       case "1":
-        document.querySelector("#pizzaSize").innerHTML = "Small";
-        return 25;
+        document.getElementById("pizzaSize").innerHTML = "Small";
+        return;
       case "2":
-        document.querySelector("#pizzaSize").innerHTML = "Medium";
-        return 33.3;
+        document.getElementById("pizzaSize").innerHTML = "Medium";
+        return;
       case "3":
-        document.querySelector("#pizzaSize").innerHTML = "Large";
-        return 50;
+        document.getElementById("pizzaSize").innerHTML = "Large";
+        return;
       default:
         console.log("bug in changeSliderLabel");
     }
@@ -449,10 +449,10 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+    for (var i = 0; i < document.getElementsByClassName("randomPizzaContainer").length; i++) {
+      var dx = determineDx(document.getElementsByClassName("randomPizzaContainer")[i], size);
+      var newwidth = (document.getElementsByClassName("randomPizzaContainer")[i].offsetWidth + dx) + 'px';
+      document.getElementsByClassName("randomPizzaContainer")[i].style.width = newwidth;
     }
   }
 
@@ -511,9 +511,8 @@ function updatePositions() {
   //Styles for the element now access the phaseArr to retrieve each element instead of calculating each time.
   for (var i = 0; i < items.length; i++){
     console.log("phaseArr[i%5]: " + phaseArr[i % 5]); 
-    //items[i].style.left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px'; 
+    items[i].style.left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px'; 
     // TO Do: Use transform translate
-    items[i].style.transform = translateX(items[i].basicLeft + 100 * phaseArr[i % 5]);
   };
 
   // User Timing API to the rescue again. Seriously, it's worth learning.

@@ -407,13 +407,13 @@ var resizePizzas = function(size) {
     switch(size) {
       case "1":
         document.querySelector("#pizzaSize").innerHTML = "Small";
-        return;
+        return 25;
       case "2":
         document.querySelector("#pizzaSize").innerHTML = "Medium";
-        return;
+        return 33.3;
       case "3":
         document.querySelector("#pizzaSize").innerHTML = "Large";
-        return;
+        return 50;
       default:
         console.log("bug in changeSliderLabel");
     }
@@ -511,7 +511,9 @@ function updatePositions() {
   //Styles for the element now access the phaseArr to retrieve each element instead of calculating each time.
   for (var i = 0; i < items.length; i++){
     console.log("phaseArr[i%5]: " + phaseArr[i % 5]); 
-    items[i].style.left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px'; // TO Do: Use transform translate
+    //items[i].style.left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px'; 
+    // TO Do: Use transform translate
+    items[i].style.transform = translateX(items[i].basicLeft + 100 * phaseArr[i % 5]);
   };
 
   // User Timing API to the rescue again. Seriously, it's worth learning.

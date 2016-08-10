@@ -504,7 +504,7 @@ function updatePositions() {
   var items = document.getElementsByClassName('mover');
   for (var i = 0; i < items.length; i++) {
     var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
-    //console.log("phase:" + phase, "scrolltop: " + document.body.scrollTop / 1250);
+    console.log("phase:" + phase, "scrolltop: " + document.body.scrollTop / 1250);
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
@@ -528,7 +528,8 @@ document.addEventListener('DOMContentLoaded', function() {
   //Create rows according to screen height
   var row = Math.round(window.screen.height / s)
   var movingPizzas = document.getElementById("movingPizzas1");
-  for (var i = 0; i < 200; i++) {//Too many Pizzas, reduce the number, how? Can we measure it according to screen height & width? or Row & Columns?
+  var numberofPizas = rows*col;
+  for (var i = 0; i < numberofPizzas; i++) {//Too many Pizzas, reduce the number, how? Can we measure it according to screen height & width? or Row & Columns?
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";

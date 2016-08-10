@@ -449,10 +449,11 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-    for (var i = 0; i < document.getElementsByClassName("randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.getElementsByClassName("randomPizzaContainer")[i], size);
-      var newwidth = (document.getElementsByClassName("randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.getElementsByClassName("randomPizzaContainer")[i].style.width = newwidth;
+    var pizzaElem = document.getElementsByClassName("randomPizzaContainer"); //selects all randomPizzaContainer in the DOM
+    var dx = determineDx(pizzaElem[0], size);//pass the first element as a parameter to determinX function
+    var newwidth = (pizzaElem[0].offsetWidth + dx) + 'px';//Select the first .randomPizzaContainer Element and it's layout width
+    for (var i = 0; i < pizzaElem.length; i++) {
+      pizzaElem[i].style.width = newwidth;
     }
   }
 
@@ -504,13 +505,14 @@ function updatePositions() {
   var items = document.getElementsByClassName('mover');
 //Created a phaseArray for pushing the elements of the phase calculation from it's own loop.
   var phaseArr = [];
+  var scrollY = (document.body.scrollTop / 1250);
   for (var j = 0; j < 5; j++) {
-    phaseArr.push(Math.sin((document.body.scrollTop / 1250) + (j % 5)));//adding a scrollTop setback with each of the element.
+    phaseArr.push(Math.sin(scrollY) + (j % 5));//adding a scrollTop setback for each of the elements.
     //console.log("phase:" + phase, "scrolltop: " + document.body.scrollTop / 1250);
   };
-  //Styles for the element now access the phaseArr to retrieve each element instead of calculating each time.
+//Styles for the element now access the phaseArr to retrieve each element instead of calculating each time.
   for (var i = 0; i < items.length; i++){
-    console.log("phaseArr[i%5]: " + phaseArr[i % 5]); 
+    //console.log("phaseArr[i%5]: " + phaseArr[i % 5]); 
     items[i].style.left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px'; 
     // TO Do: Use transform translate
   };
@@ -534,6 +536,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var s = 256; //Ques: What is 's'? How is it calculated? Ans: s= innerWidth, wasn't calculated just assigned.
   //Create rows according to window.innerHeight
   var row = Math.ceil(window.innerHeight/s);
+  //var columns = Math.ceil(window.innerWidth/s);
   console.log("window-height: " + window.innerHeight/s);
   var numberofPizzas = row * cols;
   console.log('row: ' + row);
@@ -552,4 +555,5 @@ document.addEventListener('DOMContentLoaded', function() {
     movingPizzas.appendChild(elem);
   }
   requestAnimationFrame(updatePositions);//try using requestAnimationFrame
+  //updatePositions();
 });

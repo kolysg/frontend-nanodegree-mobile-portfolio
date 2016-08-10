@@ -501,7 +501,7 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var items = document.querySelectorAll('.mover');
+  var items = document.getElementsByClassName('mover');
   for (var i = 0; i < items.length; i++) {
     var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
     //console.log("phase:" + phase, "scrolltop: " + document.body.scrollTop / 1250);
@@ -527,6 +527,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var s = 256; //Ques: What is 's'? How is it calculated? Ans: s= innerWidth, wasn't calculated just assigned.
   //Create rows according to screen height
   var row = Math.round(window.screen.height / s)
+  var movingPizzas = document.getElementById("movingPizzas1");
   for (var i = 0; i < 200; i++) {//Too many Pizzas, reduce the number, how? Can we measure it according to screen height & width? or Row & Columns?
     var elem = document.createElement('img');
     elem.className = 'mover';
@@ -537,7 +538,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("basicleft: " + elem.basicLeft);
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     console.log("elem.style.top: " + elem.style.top);
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    movingPizzas.appendChild(elem);
   }
   updatePositions();
 });

@@ -422,38 +422,54 @@ var resizePizzas = function(size) {
   changeSliderLabel(size);
 
    // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
-  function determineDx (elem, size) {
+  /*function determineDx (elem, size) {
     var oldWidth = elem.offsetWidth;
     var windowWidth = document.querySelector("#randomPizzas").offsetWidth;
-    var oldSize = oldWidth / windowWidth;
+    var oldSize = oldWidth / windowWidth;*/
 
     // Changes the slider value to a percent width
-    function sizeSwitcher (size) {
+    /*function sizeSwitcher (size) {
       switch(size) {
         case "1":
-          return 0.25;
+          newwidth = 25;
+          break;
         case "2":
-          return 0.3333;
+          newwidth = 33;
+          break;
         case "3":
-          return 0.5;
+          newwidth = 50;
+          break;
         default:
           console.log("bug in sizeSwitcher");
       }
     }
 
     var newSize = sizeSwitcher(size);
-    var dx = (newSize - oldSize) * windowWidth;
+    //var dx = (newSize - oldSize) * windowWidth;
 
     return dx;
-  }
+  }*/
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-    var pizzaElem = document.getElementsByClassName("randomPizzaContainer"); //selects all randomPizzaContainer in the DOM
-    var dx = determineDx(pizzaElem[0], size);//pass the first element as a parameter to determinX function
-    var newwidth = (pizzaElem[0].offsetWidth + dx) + 'px';//Select the first .randomPizzaContainer Element and it's layout width
-    for (var i = 0; i < pizzaElem.length; i++) {
-      pizzaElem[i].style.width = newwidth;
+    switch(size) {
+        case "1":
+          newWidth = 25;
+          break;
+        case "2":
+          newWidth = 33;
+          break;
+        case "3":
+          newWidth = 50;
+          break;
+        default:
+          console.log("bug in sizeSwitcher");
+    }
+    var randomPizza = document.getElementsByClassName("randomPizzaContainer"); //selects all randomPizzaContainer in the DOM
+    //var dx = determineDx(randomPizza[0], size);//pass the first element as a parameter to determinX function
+    //var newWidth = (randomPizza[0].offsetWidth + dx) + 'px';//Select the first .randomPizzaContainer Element and it's layout width
+    for (var i = 0; i < randomPizza.length; i++) {
+      randomPizza[i].style.width = newWidth + "%";
     }
   }
 
@@ -527,8 +543,8 @@ function updatePositions() {
   }
 }
 
-// runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
+// runs updatePositions on scroll, use requestAnimationFrameonScroll
+window.addEventListener('scroll', requestAnimationFrame(updatePositions));
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
@@ -554,6 +570,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("elem.style.top: " + elem.style.top);
     movingPizzas.appendChild(elem);
   }
-  requestAnimationFrame(updatePositions);//try using requestAnimationFrame
-  //updatePositions();
+  //requestAnimationFrame(updatePositions);//try using requestAnimationFrame
+  updatePositions();
 });

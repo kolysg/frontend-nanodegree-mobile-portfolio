@@ -421,6 +421,35 @@ var resizePizzas = function(size) {
 
   changeSliderLabel(size);
 
+   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
+  /*function determineDx (elem, size) {
+    var oldWidth = elem.offsetWidth;
+    var windowWidth = document.querySelector("#randomPizzas").offsetWidth;
+    var oldSize = oldWidth / windowWidth;*/
+
+    // Changes the slider value to a percent width
+    /*function sizeSwitcher (size) {
+      switch(size) {
+        case "1":
+          newwidth = 25;
+          break;
+        case "2":
+          newwidth = 33;
+          break;
+        case "3":
+          newwidth = 50;
+          break;
+        default:
+          console.log("bug in sizeSwitcher");
+      }
+    }
+
+    var newSize = sizeSwitcher(size);
+    //var dx = (newSize - oldSize) * windowWidth;
+
+    return dx;
+  }*/
+
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
     switch(size) {
@@ -436,12 +465,11 @@ var resizePizzas = function(size) {
         default:
           console.log("bug in sizeSwitcher");
     }
-    var randomPizza = document.querySelectorAll(".randomPizzaContainer"); //selects all randomPizzaContainer in the DOM
+    var randomPizza = document.getElementsByClassName("randomPizzaContainer"); //selects all randomPizzaContainer in the DOM
     //var dx = determineDx(randomPizza[0], size);//pass the first element as a parameter to determinX function
     //var newWidth = (randomPizza[0].offsetWidth + dx) + 'px';//Select the first .randomPizzaContainer Element and it's layout width
     for (var i = 0; i < randomPizza.length; i++) {
       randomPizza[i].style.width = newWidth + "%";
-      console.log("forLoop Run");
     }
   }
 
@@ -493,9 +521,9 @@ function updatePositions() {
   var items = document.getElementsByClassName('mover');
 //Created a phaseArray for pushing the elements of the phase calculation from it's own loop.
   var phaseArr = [];
-  var latestScrollY = (document.body.scrollTop / 1250);
+  var scrollY = (document.body.scrollTop / 1250);
   for (var j = 0; j < 5; j++) {
-    phaseArr.push(Math.sin(latestScrollY) + (j % 5));//adding a scrollTop setback for each of the elements.
+    phaseArr.push(Math.sin(scrollY) + (j % 5));//adding a scrollTop setback for each of the elements.
     //console.log("phase:" + phase, "scrolltop: " + document.body.scrollTop / 1250);
   };
 //Styles for the element now access the phaseArr to retrieve each element instead of calculating each time.
@@ -515,7 +543,7 @@ function updatePositions() {
   }
 }
 
-// runs updatePositions on scroll, use requestAnimationFrameonScroll
+// runs updatePositions on scroll, used requestAnimationFrameonScroll
 window.addEventListener('scroll', requestAnimationFrame(updatePositions));
 
 // Generates the sliding pizzas when the page loads.
@@ -523,13 +551,14 @@ document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256; //Ques: What is 's'? How is it calculated? Ans: s= innerWidth, wasn't calculated just assigned.
   //Create rows according to window.innerHeight
-  var rows = Math.ceil(window.innerHeight/s);
-  console.log('rows: ' + rows);
-  console.log(window.innerHeight/s);
+  var row = Math.ceil(window.innerHeight/s);
+  var col = Math.ceil(window.innerWidth/s);
+  cols = col;
   //var columns = Math.ceil(window.innerWidth/s);
   //console.log("window-height: " + window.innerHeight/s);
-  var numberofPizzas = rows * cols;
-  //var movingPizzas = document.querySelector("#movingPizzas1");
+  var numberofPizzas = row * col;
+  console.log('row: ' + row);
+  var movingPizzas = document.getElementById("movingPizzas1");
   
   for (var i = 0; i < numberofPizzas; i++) {//Too many Pizzas, reduce the number, how? Can we measure it according to screen height & width? or Row & Columns?
     var elem = document.createElement('img');
@@ -537,11 +566,11 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
-    elem.basicLeft = (i % cols) * s; //Just a helpful calculation (sorting trick) for setback from left in px, It holds a number which is used by the animation function to determine where each element should be
-    //console.log("basicleft: " + elem.basicLeft);
-    elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    //console.log("elem.style.top: " + elem.style.top);
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    elem.basicLeft = (i % col) * s; //Just a helpful calculation (sorting trick) for setback from left in px, It holds a number which is used by the animation function to determine where each element should be
+    console.log("basicleft: " + elem.basicLeft);
+    elem.style.top = (Math.floor(i / col) * s) + 'px';
+    console.log("elem.style.top: " + elem.style.top);
+    movingPizzas.appendChild(elem);
   }
   //requestAnimationFrame(updatePositions);//try using requestAnimationFrame
   updatePositions();

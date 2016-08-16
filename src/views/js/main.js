@@ -521,15 +521,17 @@ function updatePositions() {
   var items = document.getElementsByClassName('mover');
 //Created a phaseArray for pushing the elements of the phase calculation from it's own loop.
   var phaseArr = [];
-  var scrollY = (document.body.scrollTop / 1250);
+  var docY = (document.body.scrollTop);//the pixel of the document that has been vertically scrolled up
+  console.log("docY: " + docY);
   for (var j = 0; j < 5; j++) {
-    phaseArr.push(Math.sin(scrollY) + (j % 5));//adding a scrollTop setback for each of the elements.
-    //console.log("phase:" + phase, "scrolltop: " + document.body.scrollTop / 1250);
+    phaseArr.push(Math.sin(docY/1250) + (j % 5));//adding a static scrollTop (why divide by 1250?) setback for each of the elements.
+    console.log("phaseArr: " + phaseArr);
   };
 //Styles for the element now access the phaseArr to retrieve each element instead of calculating each time.
   for (var i = 0; i < items.length; i++){
-    //console.log("phaseArr[i%5]: " + phaseArr[i % 5]); 
-    items[i].style.left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px'; 
+    items[i].style.left = items[i].basicLeft + 100 * phaseArr[i%5] + 'px'; 
+    console.log("phaseArr[i]: " + 100*phaseArr[i%5]);
+    console.log("left: " + items[i].style.left);
     // TO Do: Use transform translate
   };
 

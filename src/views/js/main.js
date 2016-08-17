@@ -514,26 +514,29 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
 // Moves the sliding background pizzas based on scroll position
+var items;
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
   
   var phaseArr = []; //Created a phaseArray for pushing the elements of the phase calculation from it's own loop.
-  var docY = (document.body.scrollTop);//the pixel of the document that has been vertically scrolled up
+  var docY = (document.body.scrollTop/1250);//the pixel of the document that has been vertically scrolled up
   console.log("docY: " + docY);
   for (var j = 0; j < 5; j++) {
-    phaseArr.push(Math.sin(docY/1250) + (j % 5));
+    phaseArr.push(Math.sin(docY) + (j % 5));
     console.log("phaseArr: " + phaseArr);
-  };
+  }
 //Styles for the element now access the phaseArr to retrieve each element instead of calculating each time.
-  for (var i = 0; i < items.length; i++){
-    var left = items[i].basicLeft + 1000 * phaseArr[i%5] + 'px'; 
-    items[i].style.transform = "translateX("+left+") translateZ(0)";
+  var lengthHolder = items.length;
+  for (var i = 0; i < lengthHolder; i++){
+    //var left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px';
+    items[i].style.left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px'; 
+    //items[i].style.transform = "translateX("+left+") translateZ(0)";
 
     //console.log("phaseArr[i]: " + 100*phaseArr[i%5]);
     //console.log("left: " + items[i].style.left);
     // TO Do: Use transform translate
-  };
+  }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
@@ -546,13 +549,14 @@ function updatePositions() {
 }
 
 // runs updatePositions on scroll, used requestAnimationFrameonScroll
-window.addEventListener('scroll', function() {
+/*window.addEventListener('scroll', function() {
     window.requestAnimationFrame(updatePositions);
-});
+});*/
+window.addEventListener('scroll', requestAnimationFrame(updatePositions));
 
 // Generates the sliding pizzas when the page loads.
+
 document.addEventListener('DOMContentLoaded', function() {
-  var items;
   var cols = 8;
   var s = 256; //Ques: What is 's'? How is it calculated? Ans: s= innerWidth, wasn't calculated just assigned.
   //Create rows according to window.innerHeight
@@ -560,10 +564,12 @@ document.addEventListener('DOMContentLoaded', function() {
   var col = Math.ceil(window.innerWidth/s);
   cols = col;
   var numberofPizzas = row * col;
+  console.log("numberofPizzas: " + numberofPizzas);
   //console.log('row: ' + row);
-  var movingPizzas = document.getElementById("movingPizzas1");
-  var elem = document.createElement('img');
+  //var movingPizzas = document.getElementById("movingPizzas1");
+  
   for (var i = 0; i < numberofPizzas; i++) {//Too many Pizzas, reduce the number, how? Can we measure it according to screen height & width? or Row & Columns?
+    var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";//batch-update style for each element
@@ -572,9 +578,9 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("basicleft: " + elem.basicLeft);
     elem.style.top = (Math.floor(i / col) * s) + 'px';
     console.log("elem.style.top: " + elem.style.top);
-    movingPizzas.appendChild(elem);
+    document.querySelector('#movingPizzas1').appendChild(elem);
+    //movingPizzas.appendChild(elem);
   }
-  items = document.getElementsByClassName('mover'); //Changed to select the moving pizzas element by class name
-  //requestAnimationFrame(updatePositions);//try using requestAnimationFrame
+  items = document.querySelectorAll('.mover');
   updatePositions();
 });

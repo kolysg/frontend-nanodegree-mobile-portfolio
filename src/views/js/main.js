@@ -546,7 +546,9 @@ function updatePositions() {
 }
 
 // runs updatePositions on scroll, used requestAnimationFrameonScroll
-window.addEventListener('scroll', requestAnimationFrame(updatePositions));
+window.addEventListener('scroll', function() {
+    window.requestAnimationFrame(updatePositions);
+});
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
@@ -561,12 +563,12 @@ document.addEventListener('DOMContentLoaded', function() {
   var numberofPizzas = row * col;
   console.log('row: ' + row);
   var movingPizzas = document.getElementById("movingPizzas1");
-  
+  var elem = document.createElement('img');
   for (var i = 0; i < numberofPizzas; i++) {//Too many Pizzas, reduce the number, how? Can we measure it according to screen height & width? or Row & Columns?
-    var elem = document.createElement('img');
+    
     elem.className = 'mover';
     elem.src = "images/pizza.png";
-    elem.style.height = "100px";
+    elem.style.height = "100px";//batch-update style for each element
     elem.style.width = "73.333px";
     elem.basicLeft = (i % col) * s; //Just a helpful calculation (sorting trick) for setback from left in px, It holds a number which is used by the animation function to determine where each element should be
     console.log("basicleft: " + elem.basicLeft);
@@ -575,5 +577,5 @@ document.addEventListener('DOMContentLoaded', function() {
     movingPizzas.appendChild(elem);
   }
   //requestAnimationFrame(updatePositions);//try using requestAnimationFrame
-  updatePositions();
+  requestAnimationFrame(updatePositions());
 });

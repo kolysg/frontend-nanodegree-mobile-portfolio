@@ -527,9 +527,11 @@ function updatePositions() {
   };
 //Styles for the element now access the phaseArr to retrieve each element instead of calculating each time.
   for (var i = 0; i < items.length; i++){
-    items[i].style.left = items[i].basicLeft + 100 * phaseArr[i%5] + 'px'; 
-    console.log("phaseArr[i]: " + 100*phaseArr[i%5]);
-    console.log("left: " + items[i].style.left);
+    var left = items[i].basicLeft + 1000 * phaseArr[i%5] + 'px'; 
+    items[i].style.transform = "translateX("+left+") translateZ(0)";
+
+    //console.log("phaseArr[i]: " + 100*phaseArr[i%5]);
+    //console.log("left: " + items[i].style.left);
     // TO Do: Use transform translate
   };
 

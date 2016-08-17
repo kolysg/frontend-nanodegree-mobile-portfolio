@@ -517,14 +517,12 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-//Changed to select the moving pizzas element by class name
-  var items = document.getElementsByClassName('mover');
-//Created a phaseArray for pushing the elements of the phase calculation from it's own loop.
-  var phaseArr = [];
+  
+  var phaseArr = []; //Created a phaseArray for pushing the elements of the phase calculation from it's own loop.
   var docY = (document.body.scrollTop);//the pixel of the document that has been vertically scrolled up
   console.log("docY: " + docY);
   for (var j = 0; j < 5; j++) {
-    phaseArr.push(Math.sin(docY/1250) + (j % 5));//adding a static scrollTop (why divide by 1250?) setback for each of the elements.
+    phaseArr.push(Math.sin(docY/1250) + (j % 5));
     console.log("phaseArr: " + phaseArr);
   };
 //Styles for the element now access the phaseArr to retrieve each element instead of calculating each time.
@@ -552,20 +550,18 @@ window.addEventListener('scroll', function() {
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
+  var items;
   var cols = 8;
   var s = 256; //Ques: What is 's'? How is it calculated? Ans: s= innerWidth, wasn't calculated just assigned.
   //Create rows according to window.innerHeight
   var row = Math.ceil(window.innerHeight/s);
   var col = Math.ceil(window.innerWidth/s);
   cols = col;
-  //var columns = Math.ceil(window.innerWidth/s);
-  //console.log("window-height: " + window.innerHeight/s);
   var numberofPizzas = row * col;
-  console.log('row: ' + row);
+  //console.log('row: ' + row);
   var movingPizzas = document.getElementById("movingPizzas1");
   var elem = document.createElement('img');
   for (var i = 0; i < numberofPizzas; i++) {//Too many Pizzas, reduce the number, how? Can we measure it according to screen height & width? or Row & Columns?
-    
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";//batch-update style for each element
@@ -576,6 +572,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("elem.style.top: " + elem.style.top);
     movingPizzas.appendChild(elem);
   }
+  items = document.getElementsByClassName('mover'); //Changed to select the moving pizzas element by class name
   //requestAnimationFrame(updatePositions);//try using requestAnimationFrame
-  requestAnimationFrame(updatePositions());
+  updatePositions();
 });

@@ -524,14 +524,14 @@ function updatePositions() {
   console.log("docY: " + docY);
   for (var j = 0; j < 5; j++) {
     phaseArr.push(Math.sin(docY) + (j % 5));
-    console.log("phaseArr: " + phaseArr);
+    //console.log("phaseArr: " + phaseArr);
   }
 //Styles for the element now access the phaseArr to retrieve each element instead of calculating each time.
   var lengthHolder = items.length;
   for (var i = 0; i < lengthHolder; i++){
-    //var left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px';
-    items[i].style.left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px'; 
-    //items[i].style.transform = "translateX("+left+") translateZ(0)";
+    var left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px';
+    //items[i].style.left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px'; 
+    items[i].style.transform = "translateX("+left+") translateZ(0)";
 
     //console.log("phaseArr[i]: " + 100*phaseArr[i%5]);
     //console.log("left: " + items[i].style.left);
@@ -549,10 +549,10 @@ function updatePositions() {
 }
 
 // runs updatePositions on scroll, used requestAnimationFrameonScroll
-/*window.addEventListener('scroll', function() {
+window.addEventListener('scroll', function() {
     window.requestAnimationFrame(updatePositions);
-});*/
-window.addEventListener('scroll', requestAnimationFrame(updatePositions));
+});
+//window.addEventListener('scroll', requestAnimationFrame(updatePositions));
 
 // Generates the sliding pizzas when the page loads.
 
@@ -575,9 +575,9 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.height = "100px";//batch-update style for each element
     elem.style.width = "73.333px";
     elem.basicLeft = (i % col) * s; //Just a helpful calculation (sorting trick) for setback from left in px, It holds a number which is used by the animation function to determine where each element should be
-    console.log("basicleft: " + elem.basicLeft);
+    //console.log("basicleft: " + elem.basicLeft);
     elem.style.top = (Math.floor(i / col) * s) + 'px';
-    console.log("elem.style.top: " + elem.style.top);
+    //console.log("elem.style.top: " + elem.style.top);
     document.querySelector('#movingPizzas1').appendChild(elem);
     //movingPizzas.appendChild(elem);
   }

@@ -549,13 +549,18 @@ var items;
   var phaseArray = [];
   var scrollTopY = (document.body.scrollTop);
   var items = document.getElementsByClassName('mover');
-  //console.log("items: " + items); //I won't change the querySelector for now since this is micro-optimization
-  for (var i = 0; i < items.length; i++) {
+  //console.log("items: " + items); //changed the querySelector to getElementsByClass name even though this is micro-optimization
+  var i;
+  var lengthHolder = items.length;
+  //Refactored code to separate style calculation in a separate array and push the array items in the phaseArray variable.
+  for (i = 0; i < lengthHolder; i++) {
     phaseArray.push(Math.sin((scrollTopY/1250) + (i%5)));
     //console.log(phaseArray);
+  };
+  var phaseArrLength = phaseArray.length;
+  for (i = 0; i < phaseArrLength; i++) {
     items[i].style.left = items[i].basicLeft + 100 * phaseArray[i] + 'px';
-  }
-
+  };
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
   window.performance.mark("mark_end_frame");
@@ -570,44 +575,10 @@ var items;
 window.addEventListener('scroll', function() {
     window.requestAnimationFrame(updatePositions);
 });
-//window.requestAnimationFrame(updatePositions);
-//window.addEventListener('scroll', requestAnimationFrame(updatePositions));
-
-// Generates the sliding pizzas when the page loads.
-
-/*document.addEventListener('DOMContentLoaded', function() {
-  var cols = 8;
-  var s = 256; //Ques: What is 's'? How is it calculated? Ans: s= innerWidth, wasn't calculated just assigned.
-  //Create rows according to window.innerHeight
-  var rows = Math.round(window.innerHeight/s);
-  //var cols = Math.round(window.innerWidth/200);
-  //cols = col;
-  var numberofPizzas = rows * cols;
-  console.log("numberofPizzas: " + numberofPizzas);
-  //console.log('row: ' + row);
-  //var movingPizzas = document.getElementById("movingPizzas1");
-  var pizzaDiv = document.getElementById('movingPizzas1');
-  for (var i = 0; i < numberofPizzas; i++) {//Too many Pizzas, reduce the number, how? Can we measure it according to screen height & width? or Row & Columns?
-    var elem = document.createElement('img');
-    elem.className = 'mover';
-    elem.src = "images/pizza.png";
-    elem.style.height = "100px";//batch-update style for each element
-    elem.style.width = "73.333px";
-    elem.basicLeft = (i % cols) * s; //Just a helpful calculation (sorting trick) for setback from left in px, It holds a number which is used by the animation function to determine where each element should be
-    //console.log("basicleft: " + elem.basicLeft);
-    elem.style.top = (Math.ceil(i / cols) * s) + 'px';
-    //console.log("elem.style.top: " + elem.style.top);
-    pizzaDiv.appendChild(elem);
-    //movingPizzas.appendChild(elem);
-  }
-  items = document.getElementsByClassName('mover');
-  updatePositions();
-});
-*/
 
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
-  var s = 256;
+  var s = 256;//innerwidth of each element
   //console.log("innerHeight: " + window.innerHeight);
   var rowTop = 0; //solution provided in the discussion forum by mcs (https://discussions.udacity.com/t/calculating-number-of-pizzas-with-inner-height/35343/5) 
 
@@ -626,19 +597,6 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.top = rowTop + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
   }
-  
-  /*
-  var numberofPizzas = rowTop * cols;
-  console.log("numberofPizzas: " + numberofPizzas);
-  for (var i = 0; i < numberofPizzas; i++) {
-    var elem = document.createElement('img');
-    elem.className = 'mover';
-    elem.src = "images/pizza.png";
-    elem.style.height = "100px";
-    elem.style.width = "73.333px";
-    elem.basicLeft = (i % cols) * s;
-    elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
-  }*/
+
   updatePositions();
 });

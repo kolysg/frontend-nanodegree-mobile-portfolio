@@ -485,8 +485,8 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
+var pizzasDiv = document.getElementById("randomPizzas");
 for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -515,27 +515,45 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 
 // Moves the sliding background pizzas based on scroll position
 var items;
-function updatePositions() {
+/*function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
   
   var phaseArr = []; //Created a phaseArray for pushing the elements of the phase calculation from it's own loop.
   var docY = (document.body.scrollTop/1250);//the pixel of the document that has been vertically scrolled up
-  console.log("docY: " + docY);
-  for (var j = 0; j < 5; j++) {
+  //console.log("docY: " + docY);
+  var j;
+  for (j = 0; j < 5; j++) {
     phaseArr.push(Math.sin(docY) + (j % 5));
     //console.log("phaseArr: " + phaseArr);
   }
 //Styles for the element now access the phaseArr to retrieve each element instead of calculating each time.
   var lengthHolder = items.length;
-  for (var i = 0; i < lengthHolder; i++){
-    var left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px';
-    //items[i].style.left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px'; 
-    items[i].style.transform = "translateX("+left+") translateZ(0)";
+  var i;
+  for (i = 0; i < lengthHolder; i++){
+    //var left = items[i].basicLeft + 100 * phaseArr[i % 5] + 'px';
+    items[i].style.left = items[i].basicLeft + 100 * phaseArr[i] + 'px'; 
+    //items[i].style.transform = "translateX("+left+") translateZ(0)";
 
     //console.log("phaseArr[i]: " + 100*phaseArr[i%5]);
     //console.log("left: " + items[i].style.left);
     // TO Do: Use transform translate
+  }
+  */
+
+  //Old updatePositions Function 
+  function updatePositions() {
+  frame++;
+  window.performance.mark("mark_start_frame");
+  //create a separate phaseArray
+  var phaseArray = [];
+  var scrollTopY = (document.body.scrollTop);
+  var items = document.getElementsByClassName('mover');
+  //console.log("items: " + items); //I won't change the querySelector for now since this is micro-optimization
+  for (var i = 0; i < items.length; i++) {
+    phaseArray.push(Math.sin((scrollTopY/1250) + (i%5)));
+    //console.log(phaseArray);
+    items[i].style.left = items[i].basicLeft + 100 * phaseArray[i] + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -548,39 +566,79 @@ function updatePositions() {
   }
 }
 
-// runs updatePositions on scroll, used requestAnimationFrameonScroll
+// runs updatePositions on scroll, used requestAnimationFrame on Scroll
 window.addEventListener('scroll', function() {
     window.requestAnimationFrame(updatePositions);
 });
+//window.requestAnimationFrame(updatePositions);
 //window.addEventListener('scroll', requestAnimationFrame(updatePositions));
 
 // Generates the sliding pizzas when the page loads.
 
-document.addEventListener('DOMContentLoaded', function() {
+/*document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256; //Ques: What is 's'? How is it calculated? Ans: s= innerWidth, wasn't calculated just assigned.
   //Create rows according to window.innerHeight
-  var row = Math.ceil(window.innerHeight/s);
-  var col = Math.ceil(window.innerWidth/s);
-  cols = col;
-  var numberofPizzas = row * col;
+  var rows = Math.round(window.innerHeight/s);
+  //var cols = Math.round(window.innerWidth/200);
+  //cols = col;
+  var numberofPizzas = rows * cols;
   console.log("numberofPizzas: " + numberofPizzas);
   //console.log('row: ' + row);
   //var movingPizzas = document.getElementById("movingPizzas1");
-  
+  var pizzaDiv = document.getElementById('movingPizzas1');
   for (var i = 0; i < numberofPizzas; i++) {//Too many Pizzas, reduce the number, how? Can we measure it according to screen height & width? or Row & Columns?
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";//batch-update style for each element
     elem.style.width = "73.333px";
-    elem.basicLeft = (i % col) * s; //Just a helpful calculation (sorting trick) for setback from left in px, It holds a number which is used by the animation function to determine where each element should be
+    elem.basicLeft = (i % cols) * s; //Just a helpful calculation (sorting trick) for setback from left in px, It holds a number which is used by the animation function to determine where each element should be
     //console.log("basicleft: " + elem.basicLeft);
-    elem.style.top = (Math.floor(i / col) * s) + 'px';
+    elem.style.top = (Math.ceil(i / cols) * s) + 'px';
     //console.log("elem.style.top: " + elem.style.top);
-    document.querySelector('#movingPizzas1').appendChild(elem);
+    pizzaDiv.appendChild(elem);
     //movingPizzas.appendChild(elem);
   }
-  items = document.querySelectorAll('.mover');
+  items = document.getElementsByClassName('mover');
+  updatePositions();
+});
+*/
+
+document.addEventListener('DOMContentLoaded', function() {
+  var cols = 8;
+  var s = 256;
+  //console.log("innerHeight: " + window.innerHeight);
+  var rowTop = 0; //solution provided in the discussion forum by mcs (https://discussions.udacity.com/t/calculating-number-of-pizzas-with-inner-height/35343/5) 
+
+  for (var i = 0; i < 200; i++) {
+    rowTop = (Math.floor(i / cols) * s);
+
+    if (rowTop > window.innerHeight) {
+      break;
+    }
+    var elem = document.createElement('img');
+    elem.className = 'mover';
+    elem.src = "images/pizza.png";
+    elem.style.height = "100px";
+    elem.style.width = "73.333px";
+    elem.basicLeft = (i % cols) * s;
+    elem.style.top = rowTop + 'px';
+    document.querySelector("#movingPizzas1").appendChild(elem);
+  }
+  
+  /*
+  var numberofPizzas = rowTop * cols;
+  console.log("numberofPizzas: " + numberofPizzas);
+  for (var i = 0; i < numberofPizzas; i++) {
+    var elem = document.createElement('img');
+    elem.className = 'mover';
+    elem.src = "images/pizza.png";
+    elem.style.height = "100px";
+    elem.style.width = "73.333px";
+    elem.basicLeft = (i % cols) * s;
+    elem.style.top = (Math.floor(i / cols) * s) + 'px';
+    document.querySelector("#movingPizzas1").appendChild(elem);
+  }*/
   updatePositions();
 });

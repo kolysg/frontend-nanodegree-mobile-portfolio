@@ -6,7 +6,7 @@ var gulp = require('gulp'),
 	imageop = require('gulp-image-optimization'),
 	concatify = require('gulp-concat'),
 	browserSync = require('browser-sync'); //install allthe dependencies, example: npm install gulp-uglify --save-dev
-
+	cleanCSS = require('gulp-clean-css');
 //path to various files
 var paths = {
 	scripts: ['js/*.js'],    
@@ -14,9 +14,6 @@ var paths = {
 	images: ['images/*'],        
 	content: ['pizza.html']
 }; 
-
-//default
-gulp.task('default', function(){console.log('Hello Gulp')});
 
 // Optimize Images
 gulp.task('images', function() {
@@ -28,8 +25,16 @@ gulp.task('images', function() {
     .pipe(rename({ suffix: '.min'}))
 });
 
-// Concats & minifies js files and outputs them to build/js/app.js 
-gulp.task('scripts', function() {   
+//minify css stylesheet
+gulp.task('styles', function(){
+	return gulp.src(paths.styles);
+		.pipe(cleanCSS(compatibility: 'ie8'))
+		.pipe(rename({ suffix: '.min'}))
+		.pipe(gulp.dest('./../../dist/views/styles/'));
+});
+
+// Concats & minifies js files and outputs them to dist/js/ 
+gulp.task('scripts', function(){   
 	return gulp.src(paths.scripts)        
 	.pipe(sourcemaps.init())            
 	.pipe(uglify())            
@@ -38,7 +43,7 @@ gulp.task('scripts', function() {
 	.pipe(rename({ suffix: '.min'}))      
 	.pipe(gulp.dest('./../../dist/views/js/'));});
 
-// Minifies our HTML files and outputs them to build/*.html
+// Minifies our HTML files and outputs them to dist/*.html
 gulp.task('content', function() {    
 	return gulp.src(paths.content)        
 	.pipe(minifyhtml({            
@@ -48,13 +53,25 @@ gulp.task('content', function() {
 	.pipe(rename({ suffix: '.min'}))     
 	.pipe(gulp.dest('./../../dist/views/'));});
 
+//watch files
+gulp.task('watch', function(){
+	gulp.watch('paths.scripts', ['scripts']);
+	gulp.watch('paths.styles', ['scripts']);
+	gulp.watch('paths.images', ['images']);
+	//gulp.watch('paths.content', [''])
+})
+
+
+//default task
+gulp.task('default', ['images', 'scripts', 'styles' 'content', 'watch']);
+
 // Watches for changes to our files and executes required scripts
-gulp.task('css-watch', ['styles'], browserSync.reload);
+/*gulp.task('css-watch', ['styles'], browserSync.reload);
 gulp.task('image-watch', ['images', 'svgstore'], browserSync.reload);
-gulp.task('script-watch', ['scripts'], browserSync.reload);
+gulp.task('script-watch', ['scripts'], browserSync.reload);*/
 
 // Launches a test webserver
-gulp.task('browse', function(){
+/*gulp.task('browse', function(){
     browserSync({        
     	port: 3030,        
     	server: {            
@@ -66,4 +83,4 @@ gulp.task('browse', function(){
     gulp.watch(paths.content, ['content-watch']);    
     gulp.watch(paths.images, ['image-watch']);});
 
-gulp.task('serve', ['scripts', 'styles','images', 'content', 'browse']);
+gulp.task('serve', ['scripts', 'styles','images', 'content', 'browse']);*/

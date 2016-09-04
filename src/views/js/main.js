@@ -468,7 +468,9 @@ var resizePizzas = function(size) {
     var randomPizza = document.getElementsByClassName("randomPizzaContainer"); //selects all randomPizzaContainer in the DOM
     //var dx = determineDx(randomPizza[0], size);//pass the first element as a parameter to determinX function
     //var newWidth = (randomPizza[0].offsetWidth + dx) + 'px';//Select the first .randomPizzaContainer Element and it's layout width
-    for (var i = 0; i < randomPizza.length; i++) {
+    var i;
+    var randomPizzaLengthHolder = randomPizza.length;
+    for (i = 0; i < randomPizzaLengthHolder; i++) {
       randomPizza[i].style.width = newWidth + "%";
     }
   }
@@ -543,23 +545,23 @@ var items;
 
   //Old updatePositions Function 
   function updatePositions() {
-  frame++;
-  window.performance.mark("mark_start_frame");
-  //create a separate phaseArray
-  var phaseArray = [];
-  var scrollTopY = (document.body.scrollTop);
-  var items = document.getElementsByClassName('mover');
-  //console.log("items: " + items); //changed the querySelector to getElementsByClass name even though this is micro-optimization
-  var i;
-  var lengthHolder = items.length;
-  //Refactored code to separate style calculation in a separate array and push the array items in the phaseArray variable.
-  for (i = 0; i < lengthHolder; i++) {
-    phaseArray.push(Math.sin((scrollTopY/1250) + (i%5)));
-    //console.log(phaseArray);
-  };
-  var phaseArrLength = phaseArray.length;
-  for (i = 0; i < phaseArrLength; i++) {
-    items[i].style.left = items[i].basicLeft + 100 * phaseArray[i] + 'px';
+    frame++;
+    window.performance.mark("mark_start_frame");
+    //create a separate phaseArray
+    var phaseArray = [];
+    var scrollTopY = (document.body.scrollTop);
+    var items = document.getElementsByClassName('mover');
+    //console.log("items: " + items); //changed the querySelector to getElementsByClass name even though this is micro-optimization
+    var i;
+    var lengthHolder = items.length;
+    //Refactored code to separate style calculation in a separate array and push the array items in the phaseArray variable.
+    for (i = 0; i < lengthHolder; i++) {
+      phaseArray.push(Math.sin((scrollTopY/1250) + (i%5)));
+      //console.log(phaseArray);
+    };
+    var phaseArrLength = phaseArray.length;
+    for (i = 0; i < phaseArrLength; i++) {
+      items[i].style.left = items[i].basicLeft + 100 * phaseArray[i] + 'px';
   };
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
@@ -581,13 +583,12 @@ document.addEventListener('DOMContentLoaded', function() {
   var s = 256;//innerwidth of each element
   //console.log("innerHeight: " + window.innerHeight);
   var rowTop = 0; //solution provided in the discussion forum by mcs (https://discussions.udacity.com/t/calculating-number-of-pizzas-with-inner-height/35343/5) 
-
-  for (var i = 0; i < 200; i++) {
-    rowTop = (Math.floor(i / cols) * s);
-
-    if (rowTop > window.innerHeight) {
-      break;
-    }
+  var rows = window.screen.height / s
+  var numberofPizzas = rows*cols;
+  var i;
+  var movingPizzas = document.getElementById("movingPizzas1");
+  for (i = 0; i < numberofPizzas; i++) {
+    rowTop = (Math.floor(i / cols) * s);// microOptimization by creating a var i before the loop
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
@@ -595,8 +596,10 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = rowTop + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    movingPizzas.appendChild(elem);
   }
-
+  //movingPizzas.appendChild(elem);//Moving appending out of the forLoop which may help layout
+  //since layout triggers paint, and paint profile shows long pain issues in composite layers, what can be done?
+  //Getting DOMNodes into an array, batching style updates, 
   updatePositions();
 });

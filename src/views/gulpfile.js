@@ -24,7 +24,7 @@ gulp.task('images', function() {
   	.pipe(imageop({
   		optimizationLevel: 5
   	}))
-    .pipe(gulp.dest('./../../../dist/views/images/'))
+    .pipe(gulp.dest('./../../dist/views/images/'))
     .pipe(rename({ suffix: '.min'}))
 });
 
@@ -36,7 +36,7 @@ gulp.task('scripts', function() {
 	.pipe(concatify('main.js'))        
 	.pipe(sourcemaps.write())  
 	.pipe(rename({ suffix: '.min'}))      
-	.pipe(gulp.dest('./../../../dist/views/js/'));});
+	.pipe(gulp.dest('./../../dist/views/js/'));});
 
 // Minifies our HTML files and outputs them to build/*.html
 gulp.task('content', function() {    
@@ -46,12 +46,13 @@ gulp.task('content', function() {
 		quotes: true        
 	}))   
 	.pipe(rename({ suffix: '.min'}))     
-	.pipe(gulp.dest('./../../../dist/views/'));});
+	.pipe(gulp.dest('./../../dist/views/'));});
 
 // Watches for changes to our files and executes required scripts
 gulp.task('css-watch', ['styles'], browserSync.reload);
 gulp.task('image-watch', ['images', 'svgstore'], browserSync.reload);
 gulp.task('script-watch', ['scripts'], browserSync.reload);
+
 // Launches a test webserver
 gulp.task('browse', function(){
     browserSync({        

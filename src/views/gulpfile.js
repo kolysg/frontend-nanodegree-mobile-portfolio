@@ -21,27 +21,24 @@ gulp.task('images', function() {
   	.pipe(imageop({
   		optimizationLevel: 5
   	}))
-    .pipe(gulp.dest('./../../dist/views/images/'))
     .pipe(rename({ suffix: '.min'}))
+    .pipe(gulp.dest('images/'));
 });
 
 //minify css stylesheet
 gulp.task('styles', function(){
-	return gulp.src(paths.styles);
-		.pipe(cleanCSS(compatibility: 'ie8'))
+	return gulp.src(paths.styles)
+		.pipe(cleanCSS({compatibility: 'ie8'}))
 		.pipe(rename({ suffix: '.min'}))
-		.pipe(gulp.dest('./../../dist/views/styles/'));
+		.pipe(gulp.dest('css/'));
 });
 
 // Concats & minifies js files and outputs them to dist/js/ 
 gulp.task('scripts', function(){   
-	return gulp.src(paths.scripts)        
-	.pipe(sourcemaps.init())            
-	.pipe(uglify())            
-	.pipe(concatify('main.js'))        
-	.pipe(sourcemaps.write())  
+	return gulp.src(paths.scripts)                    
+	.pipe(uglify())             
 	.pipe(rename({ suffix: '.min'}))      
-	.pipe(gulp.dest('./../../dist/views/js/'));});
+	.pipe(gulp.dest('js/'));});
 
 // Minifies our HTML files and outputs them to dist/*.html
 gulp.task('content', function() {    
@@ -51,19 +48,19 @@ gulp.task('content', function() {
 		quotes: true        
 	}))   
 	.pipe(rename({ suffix: '.min'}))     
-	.pipe(gulp.dest('./../../dist/views/'));});
+	.pipe(gulp.dest('./'));});
 
 //watch files
 gulp.task('watch', function(){
 	gulp.watch('paths.scripts', ['scripts']);
-	gulp.watch('paths.styles', ['scripts']);
+	gulp.watch('paths.styles', ['styles']);
 	gulp.watch('paths.images', ['images']);
 	//gulp.watch('paths.content', [''])
 })
 
-
 //default task
-gulp.task('default', ['images', 'scripts', 'styles' 'content', 'watch']);
+gulp.task('default', ['images', 'scripts', 'styles', 'content', 'watch']);
+//gulp.task('default', ['images']);
 
 // Watches for changes to our files and executes required scripts
 /*gulp.task('css-watch', ['styles'], browserSync.reload);
@@ -81,6 +78,6 @@ gulp.task('script-watch', ['scripts'], browserSync.reload);*/
     gulp.watch(paths.scripts, ['script-watch']);    
     gulp.watch(paths.stylesheets, ['css-watch']);    
     gulp.watch(paths.content, ['content-watch']);    
-    gulp.watch(paths.images, ['image-watch']);});
+    gulp.watch(paths.images, ['image-watch']);});*/
 
-gulp.task('serve', ['scripts', 'styles','images', 'content', 'browse']);*/
+//gulp.task('serve', ['scripts', 'styles','images', 'content', 'browse']);
